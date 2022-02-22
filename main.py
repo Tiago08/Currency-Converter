@@ -29,10 +29,12 @@ class UI_app(tk.Tk):
         self.intro_label = Label(self, text = 'Welcome to Currency Convertor', bg = '#526092', fg = '#E5E5E5' ,relief = tk.RAISED, borderwidth = 3)
         self.intro_label.config(font = ('Courier',15,'bold'))
 
-        self.date_label = Label(self, text = f"1 Euro = {self.currency_converter.converter('EUR','USD',1)} USD \n Date : {self.currency_converter.data['date']}", relief = tk.GROOVE, borderwidth = 5)
+        self.date_label = Label(self, text = f"1 EUR = {self.currency_converter.converter('EUR','USD',1)} USD \n Date : {self.currency_converter.data['date']}", relief = tk.GROOVE, borderwidth = 5)
 
-        self.intro_label.place(x = 10 , y = 5)
-        self.date_label.place(x = 160, y= 50)
+        self.date_label.config(font= ('Helvetic', 10,'bold'))
+
+        self.intro_label.place(x = 65 , y = 5)
+        self.date_label.place(x = 200, y= 60)
 
         # Entry box
         valid = (self.register(self.restrictNumberOnly), '%d', '%P')
