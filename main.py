@@ -1,22 +1,27 @@
+# # Python Project on Currency Converter
+
 import requests
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 
-class currency_converter():
-    def __init__(self,url):
-        self.data= requests.get(url).json()
-        self.currencies = self.data['rates']
 
-    def converter(self, from_currency, to_convert, amount):
-        # Convert the currency to dollar
-        if from_currency != 'USD':
-            amount = amount / self.currencies[from_currency]
-        # Convert dollars to the final currency
-        amount = round((amount * self.currencies[to_convert]), 2)
+class RealTimeCurrencyConverter():
+    def __init__(self,url):
+            self.data = requests.get(url).json()
+            self.currencies = self.data['rates']
+
+    def convert(self, from_currency, to_currency, amount): 
+        initial_amount = amount 
+        if from_currency != 'USD' : 
+            amount = amount / self.currencies[from_currency] 
+  
+        # limiting the precision to 4 decimal places 
+        amount = round(amount * self.currencies[to_currency], 4) 
         return amount
 
-class UI_app(tk.Tk):
+class App(tk.Tk):
+
     def __init__(self, converter):
         tk.Tk.__init__(self)
         self.title = 'Currency Converter'
@@ -26,14 +31,12 @@ class UI_app(tk.Tk):
         self.geometry("500x200")
         
         # Label
-        self.intro_label = Label(self, text = 'Welcome to Currency Convertor', bg = '#526092', fg = '#E5E5E5' ,relief = tk.RAISED, borderwidth = 3)
+        self.intro_label = Label(self, text = 'Welcome to Real Time Currency Convertor', bg = '#3F496F', fg = '#E3E3E3', relief = tk.RAISED, borderwidth = 3)
         self.intro_label.config(font = ('Courier',15,'bold'))
 
-        self.date_label = Label(self, text = f"1 EUR = {self.currency_converter.converter('EUR','USD',1)} USD \n Date : {self.currency_converter.data['date']}", relief = tk.GROOVE, borderwidth = 5)
+        self.date_label = Label(self, text = f"1 EUR = {self.currency_converter.convert('EUR','USD',1)} USD \n Date : {self.currency_converter.data['date']}", relief = tk.GROOVE, borderwidth = 5)
 
-        self.date_label.config(font= ('Helvetic', 10,'bold'))
-
-        self.intro_label.place(x = 65 , y = 5)
+        self.intro_label.place(x = 10 , y = 5)
         self.date_label.place(x = 200, y= 60)
 
         # Entry box
@@ -69,7 +72,7 @@ class UI_app(tk.Tk):
         from_curr = self.from_currency_variable.get()
         to_curr = self.to_currency_variable.get()
 
-        converted_amount = self.currency_converter.converter(from_curr,to_curr,amount)
+        converted_amount = self.currency_converter.convert(from_curr,to_curr,amount)
         converted_amount = round(converted_amount, 2)
 
         self.converted_amount_field_label.config(text = str(converted_amount))
@@ -81,6 +84,8 @@ class UI_app(tk.Tk):
 
 if __name__ == '__main__':
     url = 'https://api.exchangerate-api.com/v4/latest/USD'
-    converter = currency_converter(url)
-    UI_app(converter)
+    converter = RealTimeCurrencyConverter(url)
+
+    App(converter)
     mainloop()
+
